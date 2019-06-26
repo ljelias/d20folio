@@ -5,13 +5,23 @@ const seeds = require('../charSeeds.json');
 router.route('/characters')
 .get( (req,res,err) => {
     //get all characters here
-    res.json(seeds);
+    //res.json(seeds);
+    db.Character.find({})
+    .sort({_id: -1}) //this puts newest on the top of the display
+    .then(characters => {console.log("Got characters: ", characters); return characters;})
+    .then(characters => res.json(characters))
+    .catch(error => res.json(500, error))
 })
 
 router.route('/character')
 .post( (req,res,err) => {
     //make new characters here
-    res.json("");
+   // res.json("");
+   const newChar = req.body;
+
+   db.Character.create(newChar)
+   .then(character => res.json(character))
+   .catch(error => res.json(500, error))
 })
 
 router.route('/character/:id')
